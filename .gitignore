@@ -1,0 +1,30 @@
+# OpenCode / editor
+.opencode/cache/
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Sensitive / environment
+.env
+.env.*
+*secret*
+*credentials*
+
+# Auto-generated session logs (if you choose to generate them)
+production/session-state/session-*.md
+
+# Archives
+*.tar.gz
+*.zip
+
+# NOTE: this .gitignore intentionally does not assume a programming
+# language, build system, or simulator output format — none of that has
+# been decided yet. Once software-architecture-director and you settle on
+# a tech stack (see /start), extend this file with the patterns relevant
+# to what you actually chose (e.g., __pycache__/ for Python, node_modules/
+# for a JS-based UI, *.h5 if you pick HDF5 for results, etc.).

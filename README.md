@@ -56,40 +56,44 @@ by their lead when relevant.
 
 ---
 
-## Model / Provider Mapping
+## Model / Provider Setup — OpenCode Go
 
-| Tier | Models used | OpenCode provider ID |
-|------|------------|----------------------|
-| Directors | DeepSeek V4 Pro / V4 Flash | `deepseek` |
-| Science leads | Qwen3.7 Max / Plus, Qwen3.6 Plus | `qwen-dashscope` (custom, OpenAI-compatible) |
-| Engineering leads | Kimi K2.7 Code / K2.6 | `moonshotai` |
-| Specialists | GLM-5.2 / GLM-5.1 | `zai` |
-| Specialists | MiMo-V2.5-Pro / MiMo-V2.5 | `xiaomi-mimo` (custom, OpenAI-compatible) |
-| Specialists | MiniMax M3 / M2.7 | `minimax` |
+All 46 agents run on a single subscription: **OpenCode Go**
+(https://opencode.ai/docs/go/) — $5 for the first month, then $10/month.
+It covers every model this team uses, so there's no juggling multiple
+provider accounts or API keys.
 
-**Before first use**, connect the native providers:
-```
-/connect deepseek
-/connect moonshotai
-/connect minimax
-/connect zai
-```
+| Tier | Models used | Provider |
+|------|------------|----------|
+| Directors | DeepSeek V4 Pro / V4 Flash | `opencode-go` |
+| Science leads | Qwen3.7 Max / Plus, Qwen3.6 Plus | `opencode-go` |
+| Engineering leads | Kimi K2.7 Code / K2.6 | `opencode-go` |
+| Specialists | GLM-5.2 / GLM-5.1 | `opencode-go` |
+| Specialists | MiMo-V2.5-Pro | `opencode-go` |
+| Specialists | MiniMax M3 / M2.7 | `opencode-go` |
 
-**Qwen and MiMo are not native OpenCode providers** as of this writing. They're
-configured in `opencode.jsonc` as OpenAI-compatible custom providers. You need:
-```bash
-export DASHSCOPE_API_KEY="your-alibaba-cloud-key"
-export MIMO_API_KEY="your-xiaomi-mimo-key"
-```
-Then verify the `baseURL` values in `opencode.jsonc` still match each
-provider's current API documentation — these endpoints can change.
+**Setup**:
+1. Sign in at [opencode.ai/auth](https://opencode.ai/auth) and subscribe to Go
+2. In the OpenCode TUI, run `/connect`, select **OpenCode Go**, paste your API key
+3. Run `/models` to confirm the models above show up for your account
 
-**Fallback option**: your original model table also lists DeepInfra and
-Fireworks AI as providers for several of these models (GLM, Kimi). If a
-custom provider integration gives you trouble, you can repoint any agent's
-`model` field in `opencode.jsonc` to e.g. `deepinfra/Qwen/Qwen3.7-Max` or
-`fireworks-ai/accounts/fireworks/models/kimi-k2-instruct` — run
-`opencode models` to see exactly what's available once connected.
+**Usage limits** are dollar-based and shared across every agent in this
+team, since they're one subscription: $12 per 5 hours, $30/week, $60/month.
+Cheaper models (DeepSeek V4 Flash, MiMo-V2.5-Pro) allow far more requests
+than expensive ones (GLM-5.2, Qwen3.7 Max) — if you're hitting limits
+often, check `opencode.jsonc` for which agents use the pricier models and
+consider whether a cheaper tier would serve that role just as well. See
+[opencode.ai/docs/go](https://opencode.ai/docs/go/) for current per-model
+request estimates and pricing.
+
+If you exceed the plan's limits, OpenCode automatically falls back to free
+models rather than blocking your requests outright (or to your Zen balance
+if you've enabled "Use balance" in the console).
+
+**Changing a model**: every agent's model is a one-line edit in
+`opencode.jsonc` — find the agent's `"model"` field and swap the
+`opencode-go/<model-id>` value. Run `opencode models` after connecting to
+see the exact IDs available to your account.
 
 ---
 

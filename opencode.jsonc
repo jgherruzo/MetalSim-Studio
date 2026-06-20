@@ -13,21 +13,26 @@
 // real domain-folder allow-rules — that's when each lead/specialist gets the
 // broad edit access within their own domain folder you originally asked for.
 //
-// SETUP REQUIRED before first use — run /connect for each provider you plan to use:
-//   /connect deepseek        -> DeepSeek V4 Pro / V4 Flash
-//   /connect moonshotai      -> Kimi K2.7 Code / K2.6
-//   /connect minimax         -> MiniMax M3 / M2.7
-//   /connect zai             -> GLM-5.2 / GLM-5.1 (Z.AI)
+// MODEL PROVIDER — OpenCode Go subscription
+// All 46 agents run on OpenCode Go (https://opencode.ai/docs/go/), a single
+// subscription ($5 first month, then $10/month) covering every model in this
+// team's roster: GLM-5.2/5.1, Kimi K2.7 Code/K2.6, MiMo-V2.5/Pro, MiniMax
+// M3/M2.7, Qwen3.7 Max/Plus, Qwen3.6 Plus, DeepSeek V4 Pro/Flash.
 //
-// Qwen (Alibaba) and MiMo (Xiaomi) are not native OpenCode providers as of writing.
-// They're configured below as OpenAI-compatible custom providers. You must:
-//   1. Set DASHSCOPE_API_KEY in your environment for Qwen models
-//   2. Set MIMO_API_KEY in your environment for MiMo models
-//   3. Verify the baseURL values still match each provider's current API docs
+// SETUP REQUIRED before first use:
+//   1. Sign in at https://opencode.ai/auth and subscribe to Go
+//   2. Run /connect in the OpenCode TUI, select "OpenCode Go", paste your API key
+//   3. Run /models to confirm the models below are available to your account
 //
-// If a custom provider fails, fall back via DeepInfra or Fireworks AI (both listed
-// in your original model table) by changing the relevant agent's "model" field to
-// e.g. "deepinfra/Qwen/Qwen3.7-Max" — check `opencode models` for exact IDs available.
+// Usage limits (dollar-based, shared across all agents since they're one
+// subscription): $12 / 5 hours, $30 / week, $60 / month. Cheaper models
+// (DeepSeek V4 Flash, MiMo-V2.5) allow far more requests than expensive ones
+// (GLM-5.2, Qwen3.7 Max) — see https://opencode.ai/docs/go/ for the current
+// per-model request estimates if you're tuning which agents use which tier.
+//
+// If you exceed Go's usage limits, OpenCode automatically falls back to free
+// models (or to your Zen balance if "Use balance" is enabled) rather than
+// blocking requests outright.
 {
   "$schema": "https://opencode.ai/config.json",
   "instructions": [
@@ -35,8 +40,8 @@
     "docs/domain-standards.md",
     "docs/coding-standards.md"
   ],
-  "model": "deepseek/deepseek-v4-pro",
-  "small_model": "deepseek/deepseek-v4-flash",
+  "model": "opencode-go/deepseek-v4-pro",
+  "small_model": "opencode-go/deepseek-v4-flash",
   "share": "disabled",
   "permission": {
     "edit": {
@@ -44,65 +49,15 @@
     }
   },
   "provider": {
-    "deepseek": {
+    "opencode-go": {
       "options": {}
-    },
-    "moonshotai": {
-      "options": {}
-    },
-    "minimax": {
-      "options": {}
-    },
-    "zai": {
-      "options": {}
-    },
-    "deepinfra": {
-      "options": {}
-    },
-    "fireworks-ai": {
-      "options": {}
-    },
-    "qwen-dashscope": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Alibaba Cloud Model Studio (Qwen)",
-      "options": {
-        "baseURL": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
-        "apiKey": "{env:DASHSCOPE_API_KEY}"
-      },
-      "models": {
-        "qwen3.7-max": {
-          "name": "Qwen3.7 Max"
-        },
-        "qwen3.7-plus": {
-          "name": "Qwen3.7 Plus"
-        },
-        "qwen3.6-plus": {
-          "name": "Qwen3.6 Plus"
-        }
-      }
-    },
-    "xiaomi-mimo": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Xiaomi MiMo",
-      "options": {
-        "baseURL": "https://api.mimo.xiaomi.com/v1",
-        "apiKey": "{env:MIMO_API_KEY}"
-      },
-      "models": {
-        "mimo-v2.5-pro": {
-          "name": "MiMo-V2.5-Pro"
-        },
-        "mimo-v2.5": {
-          "name": "MiMo-V2.5"
-        }
-      }
     }
   },
   "agent": {
     "chief-simulation-director": {
       "description": "Global coordination, vision, phase gates. Entry point for project status, scope, and sprint planning.",
       "mode": "primary",
-      "model": "deepseek/deepseek-v4-pro",
+      "model": "opencode-go/deepseek-v4-pro",
       "prompt": "{file:./.opencode/agent/chief-simulation-director.md}",
       "permission": {
         "edit": {
@@ -126,7 +81,7 @@
     "process-domain-director": {
       "description": "Owns metallurgical process science integrity: thermodynamics, kinetics, transport, process control. Use for process model questions and PSRD ownership.",
       "mode": "primary",
-      "model": "deepseek/deepseek-v4-pro",
+      "model": "opencode-go/deepseek-v4-pro",
       "prompt": "{file:./.opencode/agent/process-domain-director.md}",
       "permission": {
         "edit": {
@@ -151,7 +106,7 @@
     "software-architecture-director": {
       "description": "Owns software architecture: engine, solvers, data I/O, UI. Use for architecture decisions, interface design, and technical stack questions.",
       "mode": "primary",
-      "model": "deepseek/deepseek-v4-pro",
+      "model": "opencode-go/deepseek-v4-pro",
       "prompt": "{file:./.opencode/agent/software-architecture-director.md}",
       "permission": {
         "edit": {
@@ -179,7 +134,7 @@
     "validation-director": {
       "description": "Owns V&V strategy, acceptance criteria, validation reports. Use for validation campaigns, test strategy, and release quality gates.",
       "mode": "primary",
-      "model": "deepseek/deepseek-v4-pro",
+      "model": "opencode-go/deepseek-v4-pro",
       "prompt": "{file:./.opencode/agent/validation-director.md}",
       "permission": {
         "edit": {
@@ -204,7 +159,7 @@
     "thermodynamics-lead": {
       "description": "Thermodynamic modeling: Gibbs energy, phase equilibria, activity models. Invoke for any thermodynamics task.",
       "mode": "subagent",
-      "model": "qwen-dashscope/qwen3.7-max",
+      "model": "opencode-go/qwen3.7-max",
       "prompt": "{file:./.opencode/agent/subagents/thermodynamics-lead.md}",
       "permission": {
         "edit": {
@@ -224,7 +179,7 @@
     "reaction-kinetics-lead": {
       "description": "Reaction kinetics and rate modeling. Invoke for rate law selection, kinetic parameter estimation, reaction network design.",
       "mode": "subagent",
-      "model": "qwen-dashscope/qwen3.7-max",
+      "model": "opencode-go/qwen3.7-max",
       "prompt": "{file:./.opencode/agent/subagents/reaction-kinetics-lead.md}",
       "permission": {
         "edit": {
@@ -244,7 +199,7 @@
     "transport-phenomena-lead": {
       "description": "Heat, mass, and momentum transfer modeling. Invoke for furnace heat losses, interphase mass transfer, mixing models.",
       "mode": "subagent",
-      "model": "qwen-dashscope/qwen3.7-max",
+      "model": "opencode-go/qwen3.7-max",
       "prompt": "{file:./.opencode/agent/subagents/transport-phenomena-lead.md}",
       "permission": {
         "edit": {
@@ -264,7 +219,7 @@
     "core-engine-lead": {
       "description": "Simulation engine and batch scheduler. Invoke for state management, batch/unit scheduling, event system tasks.",
       "mode": "subagent",
-      "model": "moonshotai/kimi-k2.7-code",
+      "model": "opencode-go/kimi-k2.7-code",
       "prompt": "{file:./.opencode/agent/subagents/core-engine-lead.md}",
       "permission": {
         "edit": {
@@ -284,7 +239,7 @@
     "numerical-methods-lead": {
       "description": "ODE/DAE solvers, nonlinear systems, optimization, sensitivity analysis. Invoke for solver diagnostics and numerical issues.",
       "mode": "subagent",
-      "model": "moonshotai/kimi-k2.7-code",
+      "model": "opencode-go/kimi-k2.7-code",
       "prompt": "{file:./.opencode/agent/subagents/numerical-methods-lead.md}",
       "permission": {
         "edit": {
@@ -304,7 +259,7 @@
     "data-io-lead": {
       "description": "Data I/O: schemas, results persistence, recipe/config loading, plant data import. Invoke for any input/output or configuration task.",
       "mode": "subagent",
-      "model": "moonshotai/kimi-k2.7-code",
+      "model": "opencode-go/kimi-k2.7-code",
       "prompt": "{file:./.opencode/agent/subagents/data-io-lead.md}",
       "permission": {
         "edit": {
@@ -324,7 +279,7 @@
     "ui-ux-lead": {
       "description": "User interface: dashboard, control panel, recipe editor, visualizations. Invoke for any UI/UX task.",
       "mode": "subagent",
-      "model": "qwen-dashscope/qwen3.7-plus",
+      "model": "opencode-go/qwen3.7-plus",
       "prompt": "{file:./.opencode/agent/subagents/ui-ux-lead.md}",
       "permission": {
         "edit": {
@@ -344,7 +299,7 @@
     "process-control-lead": {
       "description": "Process control and batch optimization: PID, stage transitions, recipe optimization. Invoke for control logic and optimization tasks.",
       "mode": "subagent",
-      "model": "qwen-dashscope/qwen3.7-plus",
+      "model": "opencode-go/qwen3.7-plus",
       "prompt": "{file:./.opencode/agent/subagents/process-control-lead.md}",
       "permission": {
         "edit": {
@@ -364,7 +319,7 @@
     "process-validation-lead": {
       "description": "Process model validation against industrial/literature data. Invoke for /validate-model campaigns and calibration.",
       "mode": "subagent",
-      "model": "deepseek/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "prompt": "{file:./.opencode/agent/subagents/process-validation-lead.md}",
       "permission": {
         "edit": {
@@ -384,7 +339,7 @@
     "verification-lead": {
       "description": "Software verification and testing strategy. Invoke for unit/integration/regression test coverage tasks.",
       "mode": "subagent",
-      "model": "qwen-dashscope/qwen3.6-plus",
+      "model": "opencode-go/qwen3.6-plus",
       "prompt": "{file:./.opencode/agent/subagents/verification-lead.md}",
       "permission": {
         "edit": {
@@ -404,7 +359,7 @@
     "qa-lead": {
       "description": "Quality assurance, code review, documentation, release readiness. Invoke for /code-review and /release-checklist.",
       "mode": "subagent",
-      "model": "qwen-dashscope/qwen3.6-plus",
+      "model": "opencode-go/qwen3.6-plus",
       "prompt": "{file:./.opencode/agent/subagents/qa-lead.md}",
       "permission": {
         "edit": {
@@ -426,7 +381,7 @@
     "phase-equilibria-specialist": {
       "description": "Phase equilibria & Gibbs minimization implementation.",
       "mode": "subagent",
-      "model": "zai/glm-5.2",
+      "model": "opencode-go/glm-5.2",
       "prompt": "{file:./.opencode/agent/subagents/phase-equilibria-specialist.md}",
       "hidden": true,
       "permission": {
@@ -441,7 +396,7 @@
     "activity-model-specialist": {
       "description": "Activity coefficient models (Redlich-Kister, MQM, Pitzer).",
       "mode": "subagent",
-      "model": "zai/glm-5.2",
+      "model": "opencode-go/glm-5.2",
       "prompt": "{file:./.opencode/agent/subagents/activity-model-specialist.md}",
       "hidden": true,
       "permission": {
@@ -456,7 +411,7 @@
     "gibbs-minimization-specialist": {
       "description": "Gibbs energy functions & species thermochemical database.",
       "mode": "subagent",
-      "model": "xiaomi-mimo/mimo-v2.5-pro",
+      "model": "opencode-go/mimo-v2.5-pro",
       "prompt": "{file:./.opencode/agent/subagents/gibbs-minimization-specialist.md}",
       "hidden": true,
       "permission": {
@@ -471,7 +426,7 @@
     "topochemical-model-specialist": {
       "description": "Shrinking core, grain model, Avrami-Erofeev rate laws.",
       "mode": "subagent",
-      "model": "zai/glm-5.2",
+      "model": "opencode-go/glm-5.2",
       "prompt": "{file:./.opencode/agent/subagents/topochemical-model-specialist.md}",
       "hidden": true,
       "permission": {
@@ -486,7 +441,7 @@
     "homogeneous-kinetics-specialist": {
       "description": "Homogeneous/liquid-phase kinetics, reaction networks.",
       "mode": "subagent",
-      "model": "xiaomi-mimo/mimo-v2.5-pro",
+      "model": "opencode-go/mimo-v2.5-pro",
       "prompt": "{file:./.opencode/agent/subagents/homogeneous-kinetics-specialist.md}",
       "hidden": true,
       "permission": {
@@ -501,7 +456,7 @@
     "dissolution-kinetics-specialist": {
       "description": "Dissolution, leaching, and electrochemical kinetics.",
       "mode": "subagent",
-      "model": "zai/glm-5.1",
+      "model": "opencode-go/glm-5.1",
       "prompt": "{file:./.opencode/agent/subagents/dissolution-kinetics-specialist.md}",
       "hidden": true,
       "permission": {
@@ -516,7 +471,7 @@
     "heat-transfer-specialist": {
       "description": "Furnace heat transfer: walls, radiation, electrode heating.",
       "mode": "subagent",
-      "model": "zai/glm-5.2",
+      "model": "opencode-go/glm-5.2",
       "prompt": "{file:./.opencode/agent/subagents/heat-transfer-specialist.md}",
       "hidden": true,
       "permission": {
@@ -531,7 +486,7 @@
     "mass-transfer-specialist": {
       "description": "Interphase mass transfer, diffusion correlations.",
       "mode": "subagent",
-      "model": "xiaomi-mimo/mimo-v2.5-pro",
+      "model": "opencode-go/mimo-v2.5-pro",
       "prompt": "{file:./.opencode/agent/subagents/mass-transfer-specialist.md}",
       "hidden": true,
       "permission": {
@@ -546,7 +501,7 @@
     "fluid-dynamics-specialist": {
       "description": "Mixing models, gas injection, slag foaming.",
       "mode": "subagent",
-      "model": "zai/glm-5.1",
+      "model": "opencode-go/glm-5.1",
       "prompt": "{file:./.opencode/agent/subagents/fluid-dynamics-specialist.md}",
       "hidden": true,
       "permission": {
@@ -561,7 +516,7 @@
     "batch-scheduler-specialist": {
       "description": "Stage sequencing & transitions.",
       "mode": "subagent",
-      "model": "moonshotai/kimi-k2.6",
+      "model": "opencode-go/kimi-k2.6",
       "prompt": "{file:./.opencode/agent/subagents/batch-scheduler-specialist.md}",
       "hidden": true,
       "permission": {
@@ -576,7 +531,7 @@
     "state-manager-specialist": {
       "description": "State representation, snapshots, checkpointing.",
       "mode": "subagent",
-      "model": "moonshotai/kimi-k2.6",
+      "model": "opencode-go/kimi-k2.6",
       "prompt": "{file:./.opencode/agent/subagents/state-manager-specialist.md}",
       "hidden": true,
       "permission": {
@@ -591,7 +546,7 @@
     "event-system-specialist": {
       "description": "Event bus, alarm system.",
       "mode": "subagent",
-      "model": "zai/glm-5.2",
+      "model": "opencode-go/glm-5.2",
       "prompt": "{file:./.opencode/agent/subagents/event-system-specialist.md}",
       "hidden": true,
       "permission": {
@@ -606,7 +561,7 @@
     "ode-solver-specialist": {
       "description": "ODE/DAE solver wrappers.",
       "mode": "subagent",
-      "model": "minimax/minimax-m3",
+      "model": "opencode-go/minimax-m3",
       "prompt": "{file:./.opencode/agent/subagents/ode-solver-specialist.md}",
       "hidden": true,
       "permission": {
@@ -621,7 +576,7 @@
     "nonlinear-solver-specialist": {
       "description": "Newton-Raphson, successive substitution.",
       "mode": "subagent",
-      "model": "minimax/minimax-m3",
+      "model": "opencode-go/minimax-m3",
       "prompt": "{file:./.opencode/agent/subagents/nonlinear-solver-specialist.md}",
       "hidden": true,
       "permission": {
@@ -636,7 +591,7 @@
     "optimization-specialist": {
       "description": "Batch optimization, sensitivity analysis.",
       "mode": "subagent",
-      "model": "zai/glm-5.2",
+      "model": "opencode-go/glm-5.2",
       "prompt": "{file:./.opencode/agent/subagents/optimization-specialist.md}",
       "hidden": true,
       "permission": {
@@ -651,7 +606,7 @@
     "config-schema-specialist": {
       "description": "Input schemas, recipe format, validation.",
       "mode": "subagent",
-      "model": "zai/glm-5.1",
+      "model": "opencode-go/glm-5.1",
       "prompt": "{file:./.opencode/agent/subagents/config-schema-specialist.md}",
       "hidden": true,
       "permission": {
@@ -666,7 +621,7 @@
     "results-persistence-specialist": {
       "description": "Results writer/reader, tabular export.",
       "mode": "subagent",
-      "model": "minimax/minimax-m2.7",
+      "model": "opencode-go/minimax-m2.7",
       "prompt": "{file:./.opencode/agent/subagents/results-persistence-specialist.md}",
       "hidden": true,
       "permission": {
@@ -681,7 +636,7 @@
     "data-import-specialist": {
       "description": "Plant data import, preprocessing.",
       "mode": "subagent",
-      "model": "zai/glm-5.1",
+      "model": "opencode-go/glm-5.1",
       "prompt": "{file:./.opencode/agent/subagents/data-import-specialist.md}",
       "hidden": true,
       "permission": {
@@ -696,7 +651,7 @@
     "dashboard-specialist": {
       "description": "Control panel, KPI summary, monitoring UI.",
       "mode": "subagent",
-      "model": "qwen-dashscope/qwen3.6-plus",
+      "model": "opencode-go/qwen3.6-plus",
       "prompt": "{file:./.opencode/agent/subagents/dashboard-specialist.md}",
       "hidden": true,
       "permission": {
@@ -711,7 +666,7 @@
     "visualization-specialist": {
       "description": "Scientific plots, phase diagrams, sweep charts.",
       "mode": "subagent",
-      "model": "qwen-dashscope/qwen3.6-plus",
+      "model": "opencode-go/qwen3.6-plus",
       "prompt": "{file:./.opencode/agent/subagents/visualization-specialist.md}",
       "hidden": true,
       "permission": {
@@ -726,7 +681,7 @@
     "recipe-editor-specialist": {
       "description": "Batch recipe editor, process flow diagram.",
       "mode": "subagent",
-      "model": "zai/glm-5.2",
+      "model": "opencode-go/glm-5.2",
       "prompt": "{file:./.opencode/agent/subagents/recipe-editor-specialist.md}",
       "hidden": true,
       "permission": {
@@ -741,7 +696,7 @@
     "pid-control-specialist": {
       "description": "PID controllers, setpoint profiles.",
       "mode": "subagent",
-      "model": "minimax/minimax-m2.7",
+      "model": "opencode-go/minimax-m2.7",
       "prompt": "{file:./.opencode/agent/subagents/pid-control-specialist.md}",
       "hidden": true,
       "permission": {
@@ -756,7 +711,7 @@
     "batch-optimization-specialist": {
       "description": "Objective functions, Pareto optimization.",
       "mode": "subagent",
-      "model": "minimax/minimax-m3",
+      "model": "opencode-go/minimax-m3",
       "prompt": "{file:./.opencode/agent/subagents/batch-optimization-specialist.md}",
       "hidden": true,
       "permission": {
@@ -771,7 +726,7 @@
     "alarm-management-specialist": {
       "description": "Alarm conditions, process monitoring.",
       "mode": "subagent",
-      "model": "zai/glm-5.1",
+      "model": "opencode-go/glm-5.1",
       "prompt": "{file:./.opencode/agent/subagents/alarm-management-specialist.md}",
       "hidden": true,
       "permission": {
@@ -786,7 +741,7 @@
     "benchmark-data-specialist": {
       "description": "Dataset curation, provenance documentation.",
       "mode": "subagent",
-      "model": "zai/glm-5.2",
+      "model": "opencode-go/glm-5.2",
       "prompt": "{file:./.opencode/agent/subagents/benchmark-data-specialist.md}",
       "hidden": true,
       "permission": {
@@ -801,7 +756,7 @@
     "model-calibration-specialist": {
       "description": "Parameter fitting, cross-validation.",
       "mode": "subagent",
-      "model": "minimax/minimax-m3",
+      "model": "opencode-go/minimax-m3",
       "prompt": "{file:./.opencode/agent/subagents/model-calibration-specialist.md}",
       "hidden": true,
       "permission": {
@@ -816,7 +771,7 @@
     "unit-test-specialist": {
       "description": "Unit tests, property-based tests for invariants.",
       "mode": "subagent",
-      "model": "zai/glm-5.1",
+      "model": "opencode-go/glm-5.1",
       "prompt": "{file:./.opencode/agent/subagents/unit-test-specialist.md}",
       "hidden": true,
       "permission": {
@@ -831,7 +786,7 @@
     "integration-test-specialist": {
       "description": "End-to-end integration scenarios.",
       "mode": "subagent",
-      "model": "minimax/minimax-m3",
+      "model": "opencode-go/minimax-m3",
       "prompt": "{file:./.opencode/agent/subagents/integration-test-specialist.md}",
       "hidden": true,
       "permission": {
@@ -846,7 +801,7 @@
     "regression-test-specialist": {
       "description": "Golden output management.",
       "mode": "subagent",
-      "model": "zai/glm-5.1",
+      "model": "opencode-go/glm-5.1",
       "prompt": "{file:./.opencode/agent/subagents/regression-test-specialist.md}",
       "hidden": true,
       "permission": {
@@ -861,7 +816,7 @@
     "code-review-specialist": {
       "description": "Static analysis, code review.",
       "mode": "subagent",
-      "model": "zai/glm-5.1",
+      "model": "opencode-go/glm-5.1",
       "prompt": "{file:./.opencode/agent/subagents/code-review-specialist.md}",
       "hidden": true,
       "permission": {
@@ -875,7 +830,7 @@
     "documentation-specialist": {
       "description": "User manual, API docs, technical docs.",
       "mode": "subagent",
-      "model": "zai/glm-5.1",
+      "model": "opencode-go/glm-5.1",
       "prompt": "{file:./.opencode/agent/subagents/documentation-specialist.md}",
       "hidden": true,
       "permission": {

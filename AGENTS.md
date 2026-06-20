@@ -268,13 +268,14 @@ activates the relevant department leads.
 
 ## Provider Setup Reminder
 
-Before your first real session, connect the providers you'll use:
+This team runs entirely on **OpenCode Go**, a single subscription covering
+every model in the roster. Before your first real session:
+
 ```
-/connect deepseek
-/connect moonshotai
-/connect minimax
-/connect zai
+1. Sign in at https://opencode.ai/auth and subscribe to Go
+2. /connect  -> select "OpenCode Go" -> paste your API key
+3. /models   -> confirm the roster's models are available
 ```
 
-Qwen (Alibaba) and MiMo (Xiaomi) need manual env vars — see comments at the
-top of `opencode.jsonc` for `DASHSCOPE_API_KEY` and `MIMO_API_KEY`.
+See `README.md`'s "Model / Provider Setup — OpenCode Go" section for usage
+limits and how to swap an individual agent's model if needed.

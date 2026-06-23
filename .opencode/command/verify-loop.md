@@ -52,7 +52,9 @@ units and checklist following the same structure.
   citation in the new PSRD section")
 - For each unit type, write a checklist following
   `docs/templates/verify-checklist-template.md` — every item needs
-  ASSERTION, SOURCE, TOLERANCE, ON FAIL.
+  ASSERTION, SOURCE, GRADER TYPE, TOLERANCE, ON FAIL. Use grader types to
+  make the evaluation method explicit, and reserve `pass@k` for genuinely
+  nondeterministic checks.
 - Present the checklist to the user before dispatching. A loop with a weak
   checklist is worse than no loop — it creates false confidence.
 

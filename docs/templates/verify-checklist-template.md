@@ -28,16 +28,21 @@ rewrite the item.
 
 ## Checklist Item Anatomy
 
-Every item needs all four parts:
+Every item needs all five parts:
 
 ```
-ASSERTION:  [What must be true, stated as a checkable fact, not a vibe]
-SOURCE:     [Exact file path, dataset row, or equation the assertion must
-             trace back to — never "general knowledge" or "as expected"]
-TOLERANCE:  [Numeric threshold or exact-match requirement — no "roughly"]
-ON FAIL:    [What rejection reason gets attached when this fails, so the
-             requeued task knows exactly what to fix]
+ASSERTION:    [What must be true, stated as a checkable fact, not a vibe]
+SOURCE:       [Exact file path, dataset row, or equation the assertion must
+               trace back to — never "general knowledge" or "as expected"]
+GRADER TYPE:  [optional; one of exact-match, numeric-tolerance,
+               recompute-and-compare, range-check, source-resolves]
+TOLERANCE:    [Numeric threshold or exact-match requirement — no "roughly"]
+ON FAIL:      [What rejection reason gets attached when this fails, so the
+               requeued task knows exactly what to fix]
 ```
+
+`GRADER TYPE` is optional, but helpful. It clarifies the nature of the
+check and makes it easier to compare similar checklist items across a batch.
 
 ---
 
@@ -94,6 +99,51 @@ CHECKLIST:
 ```
 
 ---
+
+## Grader Types
+
+Use these grader types to make checklist intent explicit and to help the
+verifier choose the right evaluation method.
+
+- `exact-match` — the value must match the source exactly. Use for labels,
+  enumerated statuses, or text fields that should not vary.
+- `numeric-tolerance` — the checked value is numeric and may deviate within a
+  stated tolerance. Use for mass balance closure, yield percentages,
+  temperatures, kinetic parameters, etc.
+- `recompute-and-compare` — the verifier must re-derive the result from the
+  same underlying data or equations, not just trust the executing agent's
+  summary. This is the right choice for mass/energy balance closure,
+  thermodynamic equilibrium checks, and any computed KPI.
+- `range-check` — the parameter must fall within a physically plausible or
+  documented allowable range. Good for activation energy, diffusion
+  coefficients, temperature limits, and other physical constants.
+- `source-resolves` — the referenced citation, dataset, or file path must be
+  real and resolvable, not just written as a placeholder.
+
+`GRADER TYPE` is optional, but when present it helps make the assessor's
+expectation explicit.
+
+## Pass@k Guidance
+
+Some checks are worth repeating multiple times because they depend on a
+stochastic model, an LLM-generated reasoning chain, or a nondeterministic
+process. Use `pass@k` only when the extra cost is justified.
+
+- `pass@k` is worth it when a check can fail intermittently for reasons that
+  are not actually model errors, such as:
+  - stochastic model sampling,
+  - LLM-based interpretation of a source that may vary between turns,
+  - multiple independent executions of the same validation path.
+- `pass@k` is not worth it for deterministic engineering checks that should
+  produce the same result every time, such as exact-match, range-check, or a
+  direct recomputation from a fixed dataset.
+- If you use it, document it in the checklist item as a note, e.g.
+  `pass@k=3` for a model output that may require three independent verification
+  attempts to expose a fluke.
+
+When in doubt, prefer a single clean verification pass. Never trade scientific
+rigor for token savings; prefer the cheapest model only when it can still
+complete the required check correctly.
 
 ## Worked Example — Verifying a Simulation Report KPI
 

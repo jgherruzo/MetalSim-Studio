@@ -279,3 +279,36 @@ every model in the roster. Before your first real session:
 
 See `README.md`'s "Model / Provider Setup — OpenCode Go" section for usage
 limits and how to swap an individual agent's model if needed.
+## Cost-Aware Delegation
+
+This project shares one OpenCode Go budget across all 46 agents. Use
+`/model-budget` to inspect which agents use which model tier and to guide
+delegation decisions without changing assignments automatically.
+
+- Keep expensive agents for final quality gates, coordination, and tasks that
+  genuinely require higher reasoning or model capacity.
+- Prefer a cheaper lead or specialist for routine verification or implementation
+  work whenever it can maintain scientific rigor.
+- Never trade correctness for token savings; the point is to save budget only
+  when the cheaper agent is still the right choice for the job.
+- If you are unsure, delegate the task to the cheapest agent that can still
+  complete it correctly, and reserve the director/lead assignment for review
+  or escalation.
+
+## Iterative Retrieval for Delegation
+
+Delegating agents should pass the minimum sufficient context and avoid
+dumping everything downward. Describe the problem, the required outcome, and
+where the relevant reference material lives, then invite the subagent to pull
+more detail on demand.
+
+Use `docs/knowledge-base/INDEX.md` as the first retrieval point. That index is
+small and searchable; it lets leads and specialists find the exact document
+they need without loading the full knowledge-base into every prompt.
+
+This keeps each delegation step focused, preserves context budget, and makes
+it easier for subagents to ask for a narrow follow-up rather than trying to
+solve the whole task from an overloaded prompt.
+
+The `/model-budget` command is a lightweight budget-awareness tool, not a
+model-selection automation mechanism.

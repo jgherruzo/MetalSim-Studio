@@ -31,6 +31,15 @@ actually live in this project — check `design/architecture/` if unsure)
 - [ ] Limiting cases tested (zero concentration, equilibrium, pure component)
 - [ ] Physical plausibility checks present (negative mass, impossible temperature)
 - [ ] Thermodynamic consistency verified (Gibbs-Duhem, detailed balance)
+- [ ] No process/model parameter (temperature setpoint, activity coefficient,
+      rate constant, equilibrium composition, etc.) is a bare literal inside
+      a physics function — each must trace to the recipe/config, a value in
+      `design/process-models/`, or a cited literature/database source (see
+      `docs/coding-standards.md` → "Parameter Provenance"). This is stricter
+      than the general "no magic numbers" rule: a universal constant (R, NA)
+      just needs a name; a *process* parameter needs a traceable origin,
+      because the same number being wrong silently changes what process is
+      actually being simulated.
 
 ### Engine Code (wherever the simulation engine actually lives)
 - [ ] Implements whatever the project's actual stage-module / state /

@@ -25,6 +25,36 @@ documented at the definition site — then imported/referenced everywhere
 it's used. Where exactly that constants module/file lives depends on the
 project's chosen layout — see `design/architecture/`.
 
+## Parameter Provenance (stricter than "no magic numbers")
+"No Magic Numbers" covers universal constants (R, NA, Faraday's constant) —
+those just need a name and a source, since their value never changes
+between projects. **Process and model parameters are a different,
+stricter case**: a setpoint temperature, an activity-model interaction
+parameter, a rate constant, an assumed equilibrium composition, a particle
+size — these describe *this specific process*, not physics in general. A
+wrong universal constant breaks everything obviously; a wrong process
+parameter can silently simulate a different process than the one intended,
+while still running and producing plausible-looking numbers.
+
+Every process/model parameter used inside a physics function must trace to
+one of:
+- the batch recipe / config, as loaded at runtime — not copied into the
+  function as a default
+- a value already established in `design/process-models/` for this system,
+  with its own citation
+- a cited literature or database source, documented at the point of use
+  (formula reference, parameter source, and validity range — e.g. "Wagner
+  interaction parameter ε_Cu-As from [source], valid for x_As < 0.02")
+
+A parameter with no traceable origin — typed as a bare literal "because
+that's roughly right for this system" — fails review even if the resulting
+number is physically plausible. Plausibility is necessary but not
+sufficient; the team needs to know *why* that specific value was chosen,
+not just that it didn't produce an obviously wrong answer. This is checked
+in `/code-review`'s Physics Code section and is a `BLOCK`, not a
+`NEEDS CHANGES`, since it's about whether the simulation is trustworthy at
+all, not a style nit.
+
 ## Error Handling
 - All solver/numerical calls must catch and surface failure explicitly —
   never silently swallow an error or proceed with an invalid result
